@@ -33,7 +33,7 @@ def prepend_spacer(input_audio_dir, prepped_audio_dir):
 
     audio = AudioSegment.from_mp3(input_audio_dir)
 
-    audio = spacer.append(audio, crossfade=0)
+    #audio = spacer.append(audio, crossfade=0)
 
     audio.export(prepped_audio_dir, format='wav')
 
@@ -122,7 +122,7 @@ def run():
     prepped_audio_dir = './temp.wav'
     prepend_spacer(input_audio_dir, prepped_audio_dir)
     audio_splits = diarize_input(prepped_audio_dir)
-    audio_segments, segment_speakers = segment_audio(audio_splits, prepped_audio_dir, True)
+    audio_segments, segment_speakers = segment_audio(audio_splits, prepped_audio_dir)
     transcribe_speaker_segments(audio_segments, segment_speakers, input_audio_dir)
 
 
