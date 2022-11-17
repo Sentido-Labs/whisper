@@ -44,9 +44,9 @@ def diarize_input(prepped_audio_dir):
     # TODO change to not need a directory but instead a "Mapping" with both "waveform" and "sample_rate" key:
     #  {"waveform": (channel, time) numpy.ndarray or torch.Tensor, "sample_rate": 44100}
     #  can't be too hard with pydub
-    dzs = pipeline(prepped_audio_dir).splitlines()
+    dzs = str(pipeline(prepped_audio_dir)).splitlines()
 
-    print("pipeline output: "+dzs)
+    print("pipeline output: "+str(dzs))
 
     groups = []
     g = []
