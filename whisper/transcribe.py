@@ -247,7 +247,7 @@ def transcribe(
 
 
 def set_up_model_arguments():
-    from . import available_models
+    from __init__ import available_models
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("audio", nargs="+", type=str, help="audio file(s) to transcribe")
