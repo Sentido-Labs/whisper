@@ -31,7 +31,7 @@ def string_format_milli(millis):
 def prepend_spacer(input_audio_dir, prepped_audio_dir):
     spacer = AudioSegment.silent(duration=spacermilli)
 
-    audio = AudioSegment.from_wav(input_audio_dir)
+    audio = AudioSegment.from_mp3(input_audio_dir)
 
     audio = spacer.append(audio, crossfade=0)
 
