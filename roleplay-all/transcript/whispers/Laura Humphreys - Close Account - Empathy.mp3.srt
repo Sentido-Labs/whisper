@@ -1,0 +1,60 @@
+1
+00:00:00,000 --> 00:00:04,000
+Good afternoon, Hollandwood Finance, this is Laura speaking, how can I help you?
+
+2
+00:00:04,000 --> 00:00:07,000
+Oh hello, I need to close an account please.
+
+3
+00:00:07,000 --> 00:00:15,000
+Okay, no problems. Can I just ask why? Is there a problem with the account?
+
+4
+00:00:15,000 --> 00:00:24,000
+It's actually my father's account, he just passed away so I'm just tying up all the accounts and things.
+
+5
+00:00:24,000 --> 00:00:32,000
+Oh I'm so sorry to hear that, of course. What's your name? What was your father's name?
+
+6
+00:00:32,000 --> 00:00:38,000
+My father's name was Pete Young, I've got the account number here if you need it.
+
+7
+00:00:38,000 --> 00:00:41,000
+Pete Young, oh yes please, what's the account number?
+
+8
+00:00:41,000 --> 00:01:01,000
+It's CF098127. I've got him here Pete Young. Okay then I can close that for you, I'm so sorry.
+
+9
+00:01:01,000 --> 00:01:05,000
+Is there anything else that I can do today?
+
+10
+00:01:05,000 --> 00:01:11,000
+What should I do? I think the balance is on empty, right?
+
+11
+00:01:11,000 --> 00:01:13,000
+There's nothing in it I'm afraid.
+
+12
+00:01:13,000 --> 00:01:20,000
+There's nothing to tie up there. Anything else I can do for you today? That's all closed for you now.
+
+13
+00:01:20,000 --> 00:01:23,000
+Okay, that's great, thank you so much for your help.
+
+14
+00:01:23,000 --> 00:01:26,000
+Okay then, good bye.
+
+15
+00:01:26,000 --> 00:01:36,000
+Thanks, bye.
+
