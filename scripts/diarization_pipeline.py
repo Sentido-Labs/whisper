@@ -6,7 +6,7 @@ import numpy as np
 from pyannote.audio import Pipeline
 from pydub import AudioSegment
 
-from whisper.transcribe import transcribe, set_up_model_arguments
+from whisper import set_up_model_arguments, transcribe
 
 spacermilli = 2000
 
