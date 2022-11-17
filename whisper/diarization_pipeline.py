@@ -102,6 +102,7 @@ def transcribe_speaker_segments(audio_segments, speaker_segments, input_audio_di
 
     for i, (audio, start_milli, end_milli) in enumerate(audio_segments):
         audio = np.ndarray(audio.get_array_of_samples())
+        print(audio)
         result = transcribe(model, audio, temperature=temperature, **args)
         output.append(speaker_segments[i]+'\n'+string_format_milli(start_milli)+' --> '
                       + string_format_milli(end_milli) + '\n' + result['text'])
