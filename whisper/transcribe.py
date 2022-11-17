@@ -8,8 +8,8 @@ import torch
 import tqdm
 
 from audio import SAMPLE_RATE, N_FRAMES, HOP_LENGTH, pad_or_trim, log_mel_spectrogram
-from .decoding import DecodingOptions, DecodingResult
-from .tokenizer import LANGUAGES, TO_LANGUAGE_CODE, get_tokenizer
+from decoding import DecodingOptions, DecodingResult
+from tokenizer import LANGUAGES, TO_LANGUAGE_CODE, get_tokenizer
 from utils import exact_div, format_timestamp, optional_int, optional_float, str2bool, write_txt, write_vtt, write_srt
 
 if TYPE_CHECKING:
