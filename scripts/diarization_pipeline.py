@@ -1,10 +1,12 @@
-from pyannote.audio import Pipeline
+import os
 import re
-from pydub import AudioSegment
-from huggingface_hub import HfApi
-from whisper.transcribe import transcribe, set_up_model_arguments
-import numpy as np
+import sys
 
+import numpy as np
+from pyannote.audio import Pipeline
+from pydub import AudioSegment
+
+from whisper.transcribe import transcribe, set_up_model_arguments
 
 spacermilli = 2000
 
@@ -39,6 +41,9 @@ def prepend_spacer(input_audio_dir, prepped_audio_dir):
 def diarize_input(prepped_audio_dir):
     pipeline = Pipeline.from_pretrained('pyannote/speaker-diarization', use_auth_token=True)
 
+    # TODO change to not need a directory but instead a "Mapping" with both "waveform" and "sample_rate" key:
+    #  {"waveform": (channel, time) numpy.ndarray or torch.Tensor, "sample_rate": 44100}
+    #  can't be too hard with pydub
     dzs = pipeline(prepped_audio_dir).splitlines()
 
     print("pipeline output: "+dzs)
@@ -100,6 +105,18 @@ def transcribe_speaker_segments(audio_segments, speaker_segments, input_audio_di
         output.append(speaker_segments[i]+'\n'+string_format_milli(start_milli)+' --> '
                       + string_format_milli(end_milli) + '\n' + result['text'])
 
-    with open(output_dir+'/output.txt', "w") as outfile:
+    with open(output_dir+'/'+os.path.basename(input_audio_dir)+'.dia.txt', "w") as outfile:
         outfile.write('\n\n'.join(output))
 
+
+def run():
+    input_audio_dir = str(sys.argv[1])
+    prepped_audio_dir = './temp.wav'
+    prepend_spacer(input_audio_dir, prepped_audio_dir)
+    audio_splits = diarize_input(prepped_audio_dir)
+    audio_segments, segment_speakers = segment_audio(audio_splits, prepped_audio_dir, True)
+    transcribe_speaker_segments(audio_segments, segment_speakers, input_audio_dir)
+
+
+if __name__ == '__main__':
+    run()
