@@ -118,5 +118,4 @@ def run():
     transcribe_speaker_segments(audio_segments, segment_speakers, input_audio_dir)
 
 
-if __name__ == '__main__':
-    run()
+run()
