@@ -316,7 +316,7 @@ def set_up_model_arguments():
     if threads > 0:
         torch.set_num_threads(threads)
 
-    from . import load_model
+    from __init__ import load_model
     model = load_model(model_name, device=device, download_root=model_dir)
 
     return args, model, output_dir, temperature
