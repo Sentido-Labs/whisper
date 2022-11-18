@@ -94,8 +94,7 @@ def segment_audio(audio_splits, prepped_audio_dir, spacer_prepended=False):
         #audio_segments.append((audio[start:end], start, end))
         #segment_speakers.append(speaker)
         audio[start:end].export(str(i_audio_segments) + '.wav', format='wav')
-
-    return audio_segments, segment_speakers
+    return i_audio_segments, segment_speakers
 
 
 def transcribe_speaker_segments(audio_segments, speaker_segments, input_audio_dir):
