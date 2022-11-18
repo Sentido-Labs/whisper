@@ -246,11 +246,12 @@ def transcribe(
     return dict(text=tokenizer.decode(all_tokens[len(initial_prompt):]), segments=all_segments, language=language)
 
 
-def set_up_model_arguments():
+def set_up_model_arguments(cli_call=True):
     from __init__ import available_models
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("audio", nargs="+", type=str, help="audio file(s) to transcribe")
+    if cli_call:
+        parser.add_argument("audio", nargs="+", type=str, help="audio file(s) to transcribe")
     parser.add_argument("--model", default="small", choices=available_models(), help="name of the Whisper model to use")
     parser.add_argument("--model_dir", type=str, default=None,
                         help="the path to save model files; uses ~/.cache/whisper by default")
