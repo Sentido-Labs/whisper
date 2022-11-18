@@ -19,15 +19,13 @@ def millisec(timeStr):
     return s
 
 
-def string_format_milli(millis):
-    milliseconds = str(millis)[:-3]
-    seconds = (millis / 1000) % 60
-    seconds = int(seconds)
-    minutes = (millis / (1000 * 60)) % 60
-    minutes = int(minutes)
-    hours = (millis / (1000 * 60 * 60)) % 24
-    hours = int(hours)
-    return hours+':'+minutes+':'+seconds+','+milliseconds
+def convert_from_ms(milliseconds):
+    seconds, milliseconds = divmod(milliseconds,1000)
+    minutes, seconds = divmod(seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    days, hours = divmod(hours, 24)
+    seconds = seconds + milliseconds/1000
+    return str(hours)+':'+str(minutes)+':'+str(seconds)
 
 
 def prepend_spacer(input_audio_dir, prepped_audio_dir):
