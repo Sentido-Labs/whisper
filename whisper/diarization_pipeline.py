@@ -8,6 +8,8 @@ from pydub import AudioSegment
 
 from transcribe import transcribe, set_up_model_arguments
 
+from decoding import DecodingOptions
+
 spacermilli = 2000
 
 
@@ -20,11 +22,11 @@ def millisec(timeStr):
 def string_format_milli(millis):
     milliseconds = str(millis)[:-3]
     seconds = (millis / 1000) % 60
-    seconds = str(seconds)
+    seconds = int(seconds)
     minutes = (millis / (1000 * 60)) % 60
-    minutes = str(minutes)
+    minutes = int(minutes)
     hours = (millis / (1000 * 60 * 60)) % 24
-    hours = str(hours)
+    hours = int(hours)
     return hours+':'+minutes+':'+seconds+','+milliseconds
 
 
@@ -100,6 +102,7 @@ def segment_audio(audio_splits, prepped_audio_dir, spacer_prepended=False):
 def transcribe_speaker_segments(i_audio_segments, speaker_info, input_audio_dir):
     from __init__ import load_model
     model = load_model("small", device="cuda")
+    decode_options = DecodingOptions(language='en')
 
     output = []
 
@@ -108,7 +111,7 @@ def transcribe_speaker_segments(i_audio_segments, speaker_info, input_audio_dir)
         # audio = np.frombuffer(audio.get_array_of_samples(), dtype=np.float32)
         (speaker, start_milli, end_milli) = speaker_info[i]
 
-        result = transcribe(model, str(i)+'.wav', temperature=0.0)
+        result = transcribe(model, str(i)+'.wav', decode_options)
         output.append(speaker+'\n'+string_format_milli(start_milli)+' --> '
                       + string_format_milli(end_milli) + '\n' + result['text'])
 
