@@ -300,6 +300,7 @@ def set_up_model_arguments(cli_call=True):
     device: str = args.pop("device")
 
     os.makedirs(output_dir, exist_ok=True)
+
     if model_name.endswith(".en") and args["language"] not in {"en", "English"}:
         if args["language"] is not None:
             warnings.warn(
