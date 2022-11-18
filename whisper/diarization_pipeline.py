@@ -74,7 +74,7 @@ def diarize_input(prepped_audio_dir):
 
 def segment_audio(audio_splits, prepped_audio_dir, spacer_prepended=False):
     audio_segments = []
-    segment_speakers = []
+    segment_info = []
 
     audio = AudioSegment.from_wav(prepped_audio_dir)
 
@@ -92,24 +92,23 @@ def segment_audio(audio_splits, prepped_audio_dir, spacer_prepended=False):
         i_audio_segments += 1
         # TODO stream instead of file hop
         #audio_segments.append((audio[start:end], start, end))
-        #segment_speakers.append(speaker)
+        segment_info.append((speaker, start, end))
         audio[start:end].export(str(i_audio_segments) + '.wav', format='wav')
-    return i_audio_segments, segment_speakers
+    return i_audio_segments, segment_info
 
 
-def transcribe_speaker_segments(audio_segments, speaker_segments, input_audio_dir):
+def transcribe_speaker_segments(i_audio_segments, speaker_info, input_audio_dir):
     args, model, output_dir, temperature = set_up_model_arguments()
 
     output = []
 
-    for i, (audio, start_milli, end_milli) in enumerate(audio_segments):
-        print(audio)
+    for i in range(i_audio_segments):
         # TODO fix streaming and pass into transcribe as ndarray
         # audio = np.frombuffer(audio.get_array_of_samples(), dtype=np.float32)
+        speaker, start_milli, end_milli = speaker_info
 
-        print(audio)
         result = transcribe(model, str(i)+'.wav', temperature=temperature, **args)
-        output.append(speaker_segments[i]+'\n'+string_format_milli(start_milli)+' --> '
+        output.append(speaker+'\n'+string_format_milli(start_milli)+' --> '
                       + string_format_milli(end_milli) + '\n' + result['text'])
 
     with open(output_dir+'/'+os.path.basename(input_audio_dir)+'.dia.txt', "w") as outfile:
