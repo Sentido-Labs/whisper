@@ -19,7 +19,7 @@ def millisec(timeStr):
     return s
 
 
-def convert_from_ms(milliseconds):
+def string_format_milli(milliseconds):
     seconds, milliseconds = divmod(milliseconds,1000)
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
