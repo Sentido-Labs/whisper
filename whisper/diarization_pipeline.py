@@ -107,7 +107,7 @@ def transcribe_speaker_segments(i_audio_segments, speaker_info, input_audio_dir)
         # audio = np.frombuffer(audio.get_array_of_samples(), dtype=np.float32)
         (speaker, start_milli, end_milli) = speaker_info[i]
 
-        result = transcribe(model, str(i)+'.wav', temperature=temperature, **args)
+        result = transcribe(model, str(i)+'.wav', temperature=temperature)
         output.append(speaker+'\n'+string_format_milli(start_milli)+' --> '
                       + string_format_milli(end_milli) + '\n' + result['text'])
 
