@@ -83,8 +83,8 @@ def segment_audio(audio_splits, prepped_audio_dir, spacer_prepended=False):
         start = re.findall('[0-9]+:[0-9]+:[0-9]+\.[0-9]+', string=g[0])[0]
         end = re.findall('[0-9]+:[0-9]+:[0-9]+\.[0-9]+', string=g[-1])[1]
         speaker = re.findall('SPEAKER_[0-9][0-9]', string=g[-1])[0]
-        start = millisec(start)
-        end = millisec(end)
+        start = millisec(start) + 1
+        end = millisec(end) + 1
         if spacer_prepended:
             start -= spacermilli
             end -= spacermilli
