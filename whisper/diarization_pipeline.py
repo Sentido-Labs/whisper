@@ -3,6 +3,7 @@ import re
 import sys
 
 import numpy as np
+import pydub
 from pyannote.audio import Pipeline
 from pydub import AudioSegment
 
@@ -28,23 +29,28 @@ def string_format_milli(milliseconds):
     return str(hours)+':'+str(minutes)+':'+str(seconds)
 
 
-def prepend_spacer(input_audio_dir, prepped_audio_dir):
+def prepend_spacer(input_audio_dir):
     spacer = AudioSegment.silent(duration=spacermilli)
 
     audio = AudioSegment.from_mp3(input_audio_dir)
 
-    #audio = spacer.append(audio, crossfade=0)
+    audio = spacer.append(audio, crossfade=0)
 
-    audio.export(prepped_audio_dir, format='wav')
+    return audio  # audio.export(prepped_audio_dir, format='wav')
 
 
-def diarize_input(prepped_audio_dir):
+def diarize_input(audio: AudioSegment):
     pipeline = Pipeline.from_pretrained('pyannote/speaker-diarization', use_auth_token=True)
 
     # TODO change to not need a directory but instead a "Mapping" with both "waveform" and "sample_rate" key:
     #  {"waveform": (channel, time) numpy.ndarray or torch.Tensor, "sample_rate": 44100}
     #  can't be too hard with pydub
-    dzs = str(pipeline(prepped_audio_dir)).splitlines()
+    mono = audio.split_to_mono()
+    waveform = np.frombuffer(mono.get_array_of_samples(), dtype=np.float32)
+    sample_rate = mono.sample_width
+    audio_mapping = {"waveform": waveform, "sample_rate": sample_rate}
+
+    dzs = str(pipeline(audio_mapping)).splitlines()
 
     print("pipeline output: "+str(dzs))
 
@@ -72,11 +78,9 @@ def diarize_input(prepped_audio_dir):
     return groups
 
 
-def segment_audio(audio_splits, prepped_audio_dir, spacer_prepended=False):
+def segment_audio(audio, audio_splits, spacer_prepended=False):
     audio_segments = []
     segment_info = []
-
-    audio = AudioSegment.from_wav(prepped_audio_dir)
 
     i_audio_segments = -1
     for g in audio_splits:
@@ -119,10 +123,9 @@ def transcribe_speaker_segments(i_audio_segments, speaker_info, input_audio_dir)
 
 def run():
     input_audio_dir = str(sys.argv[1])
-    prepped_audio_dir = './temp.wav'
-    prepend_spacer(input_audio_dir, prepped_audio_dir)
-    audio_splits = diarize_input(prepped_audio_dir)
-    audio_segments, segment_speakers = segment_audio(audio_splits, prepped_audio_dir)
+    audio = prepend_spacer(input_audio_dir)
+    audio_splits = diarize_input(audio)
+    audio_segments, segment_speakers = segment_audio(audio, audio_splits, True)
     transcribe_speaker_segments(audio_segments, segment_speakers, input_audio_dir)
 
 
