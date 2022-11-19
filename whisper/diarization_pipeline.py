@@ -40,12 +40,13 @@ def prepend_spacer(input_audio_dir):
 
 
 def diarize_input(audio: AudioSegment):
-    pipeline = Pipeline.from_pretrained('pyannote/speaker-diarization', use_auth_token=True)
+    pipeline = Pipeline.from_pretrained('pyannote/speaker-diarization', use_auth_token=True,
+                                        cache_dir='/data/ambrose/.cache/huggingface')
 
     # TODO change to not need a directory but instead a "Mapping" with both "waveform" and "sample_rate" key:
     #  {"waveform": (channel, time) numpy.ndarray or torch.Tensor, "sample_rate": 44100}
     #  can't be too hard with pydub
-    mono = audio.split_to_mono()
+    mono = audio.set_channels(1)
     waveform = np.frombuffer(mono.get_array_of_samples(), dtype=np.float32)
     sample_rate = mono.sample_width
     audio_mapping = {"waveform": waveform, "sample_rate": sample_rate}
