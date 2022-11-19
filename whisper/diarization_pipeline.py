@@ -55,8 +55,9 @@ def diarize_input(audio: AudioSegment):
     #  {"waveform": (channel, time) numpy.ndarray or torch.Tensor, "sample_rate": 44100}
     #  can't be too hard with pydub
     mono = audio.set_channels(1)
-    print(np.array(mono.get_array_of_samples()))
-    waveform = np.ndarray(mono.get_array_of_samples())
+    print(np.array(mono.get_array_of_samples()).shape)
+    print(mono.raw_data)
+    waveform = np.frombuffer(mono.get_array_of_samples(), dtype=np.int16)
     sample_rate = mono.sample_width
     audio_mapping = {"waveform": waveform, "sample_rate": sample_rate}
 
