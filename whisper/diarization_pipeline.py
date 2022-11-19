@@ -56,7 +56,7 @@ def diarize_input(audio: AudioSegment):
     #  can't be too hard with pydub
     mono = audio.set_channels(1)
     print(mono.get_array_of_samples())
-    waveform = np.frombuffer(mono.get_array_of_samples(), dtype=np.float32)
+    waveform = np.frombuffer(mono.get_array_of_samples(), dtype=np.int)
     sample_rate = mono.sample_width
     audio_mapping = {"waveform": waveform, "sample_rate": sample_rate}
 
