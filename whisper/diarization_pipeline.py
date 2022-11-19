@@ -32,7 +32,12 @@ def string_format_milli(milliseconds):
 def prepend_spacer(input_audio_dir):
     spacer = AudioSegment.silent(duration=spacermilli)
 
-    audio = AudioSegment.from_mp3(input_audio_dir)
+    if input_audio_dir[-3] == "mp3":
+        audio = AudioSegment.from_mp3(input_audio_dir)
+    elif input_audio_dir[-3] == "wav":
+        audio = AudioSegment.from_wav(input_audio_dir)
+    else:
+        raise NotImplementedError('File Type not yet implemented!')
 
     audio = spacer.append(audio, crossfade=0)
 
@@ -47,6 +52,7 @@ def diarize_input(audio: AudioSegment):
     #  {"waveform": (channel, time) numpy.ndarray or torch.Tensor, "sample_rate": 44100}
     #  can't be too hard with pydub
     mono = audio.set_channels(1)
+    print(mono.get_array_of_samples())
     waveform = np.frombuffer(mono.get_array_of_samples(), dtype=np.float32)
     sample_rate = mono.sample_width
     audio_mapping = {"waveform": waveform, "sample_rate": sample_rate}

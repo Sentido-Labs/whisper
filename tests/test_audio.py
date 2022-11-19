@@ -3,6 +3,7 @@ import os.path
 import numpy as np
 
 from whisper.audio import load_audio, log_mel_spectrogram, SAMPLE_RATE
+from pydub import AudioSegment
 
 
 def test_audio():
@@ -17,3 +18,4 @@ def test_audio():
 
     assert np.allclose(mel_from_audio, mel_from_file)
     assert mel_from_audio.max() - mel_from_audio.min() <= 2.0
+
