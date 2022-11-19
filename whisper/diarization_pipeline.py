@@ -32,10 +32,10 @@ def string_format_milli(milliseconds):
 def prepend_spacer(input_audio_dir):
     spacer = AudioSegment.silent(duration=spacermilli)
 
-    print(input_audio_dir[-4])
-    if "mp3" in input_audio_dir[-4]:
+    print(input_audio_dir[-4:])
+    if "mp3" in input_audio_dir[-4:]:
         audio = AudioSegment.from_mp3(input_audio_dir)
-    elif "wav" in input_audio_dir[-4]:
+    elif "wav" in input_audio_dir[-4:]:
         audio = AudioSegment.from_wav(input_audio_dir)
     else:
         raise NotImplementedError('File Type not yet implemented!')
