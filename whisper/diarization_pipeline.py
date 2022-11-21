@@ -6,6 +6,7 @@ import numpy as np
 import pydub
 from pyannote.audio import Pipeline
 from pydub import AudioSegment
+import torchaudio
 
 from transcribe import transcribe, set_up_model_arguments
 
@@ -57,8 +58,9 @@ def diarize_input(audio: AudioSegment):
     mono = audio.set_channels(1)
     print(np.array(mono.get_array_of_samples()).shape)
     print(mono.raw_data)
-    waveform = np.frombuffer(mono.get_array_of_samples(), dtype=np.int16)
-    sample_rate = mono.sample_width
+    waveform, sample_rate = torchaudio.load(mono.raw_data)
+    # waveform = np.frombuffer(mono.get_array_of_samples(), dtype=np.int16)
+    # sample_rate = mono.sample_width
     audio_mapping = {"waveform": waveform, "sample_rate": sample_rate}
 
     dzs = str(pipeline(audio_mapping)).splitlines()
