@@ -64,7 +64,7 @@ def diarize_input(audio: AudioSegment):
 
     dzs = str(pipeline(audio_mapping)).splitlines()
 
-    print("pipeline output: "+str(dzs))
+    # print("pipeline output: "+str(dzs))
 
     groups = []
     g = []
