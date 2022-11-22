@@ -54,8 +54,7 @@ def prepend_spacer(input_audio_dir):
 
 
 def diarize_input(audio_mapping):
-    pipeline = Pipeline.from_pretrained('pyannote/speaker-diarization', use_auth_token=True,
-                                        cache_dir='/data/ambrose/.cache/huggingface')
+    pipeline = Pipeline.from_pretrained('pyannote/speaker-diarization', use_auth_token=True)
 
     # TODO change to not need a directory but instead a "Mapping" with both "waveform" and "sample_rate" key:
     #  {"waveform": (channel, time) numpy.ndarray or torch.Tensor, "sample_rate": 44100}
@@ -91,10 +90,12 @@ def diarize_input(audio_mapping):
 
 def get_audio_mapping(audio_path):
     SAMPLE_RATE = 16000
+    from pydub.utils import mediainfo
+    audio_format = mediainfo("./" + audio_path)['format_name']
 
     import pathlib
     torchaudio.set_audio_backend("sox_io")
-    waveform, sample_rate = torchaudio.load(str(pathlib.Path().resolve()) + '/' + audio_path)
+    waveform, sample_rate = torchaudio.load(str(pathlib.Path().resolve()) + '/' + audio_path, format=audio_format)
     transform = transforms.Resample(sample_rate, SAMPLE_RATE)
     waveform = transform(waveform)
     # waveform = torch.from_numpy(load_audio(audio_path))
@@ -114,8 +115,8 @@ def segment_audio(audio_mapping, audio_splits, spacer_prepended=False):
         start = re.findall('[0-9]+:[0-9]+:[0-9]+\.[0-9]+', string=g[0])[0]
         end = re.findall('[0-9]+:[0-9]+:[0-9]+\.[0-9]+', string=g[-1])[1]
         speaker = re.findall('SPEAKER_[0-9][0-9]', string=g[-1])[0]
-        start = (millisec(start) + 1)
-        end = (millisec(end) + 1)
+        start = (millisec(start))
+        end = (millisec(end))
         if spacer_prepended:
             start -= spacermilli
             end -= spacermilli
