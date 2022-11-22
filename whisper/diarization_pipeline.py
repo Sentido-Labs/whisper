@@ -56,13 +56,7 @@ def prepend_spacer(input_audio_dir):
 def diarize_input(audio_mapping):
     pipeline = Pipeline.from_pretrained('pyannote/speaker-diarization', use_auth_token=True)
 
-    # TODO change to not need a directory but instead a "Mapping" with both "waveform" and "sample_rate" key:
-    #  {"waveform": (channel, time) numpy.ndarray or torch.Tensor, "sample_rate": 44100}
-    #  can't be too hard with pydub
-
     dzs = str(pipeline(audio_mapping)).splitlines()
-
-    # print("pipeline output: "+str(dzs))
 
     groups = []
     g = []
@@ -126,7 +120,6 @@ def segment_audio(audio_mapping, audio_splits, spacer_prepended=False):
         start_hz = int(start * milli_hz)
         end_hz = int(end * milli_hz)
 
-        # TODO stream instead of file hop
         audio_segments.append(waveform[:, start_hz:end_hz])
         segment_info.append((speaker, start, end))
 
@@ -135,14 +128,12 @@ def segment_audio(audio_mapping, audio_splits, spacer_prepended=False):
 
 def transcribe_speaker_segments(audio_segments, speaker_info, audio_path):
     from __init__ import load_model
-    model = load_model("small", device="cuda")
+    model = load_model("medium", device="cuda")
     args = DecodingOptions(language='en').__dict__
 
     output = []
 
     for i, segment_waveform in enumerate(audio_segments):
-        # TODO fix streaming and pass into transcribe as ndarray
-        # audio = np.frombuffer(audio.get_array_of_samples(), dtype=np.float32)
         (speaker, start_milli, end_milli) = speaker_info[i]
 
         result = transcribe(model, segment_waveform, **args)
