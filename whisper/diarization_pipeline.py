@@ -118,11 +118,11 @@ def segment_audio(audio_mapping, audio_splits, spacer_prepended=False):
         print(start, end)
         i_audio_segments += 1
 
-        start_hz = start * milli_hz
-        end_hz = end * milli_hz
+        start_hz = int(start * milli_hz)
+        end_hz = int(end * milli_hz)
 
         # TODO stream instead of file hop
-        audio_segments.append(waveform[start_hz:end_hz])
+        audio_segments.append(waveform[:, start_hz:end_hz])
         segment_info.append((speaker, start, end))
 
     return audio_segments, segment_info
