@@ -111,11 +111,12 @@ def log_mel_spectrogram(audio: Union[str, np.ndarray, torch.Tensor], n_mels: int
             audio = load_audio(audio)
         audio = torch.from_numpy(audio)
 
+    print(audio)
+    print(audio.shape)
+
     window = torch.hann_window(N_FFT).to(audio.device)
     stft = torch.stft(audio, N_FFT, HOP_LENGTH, window=window, return_complex=True)
     magnitudes = stft[:, :-1].abs() ** 2
-    print(magnitudes)
-    print(magnitudes.shape)
 
     filters = mel_filters(audio.device, n_mels)
     mel_spec = filters @ magnitudes
