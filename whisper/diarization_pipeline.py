@@ -2,14 +2,14 @@ import os
 import re
 import sys
 
-import numpy as np
 import pyannote.audio
-import pydub
 from pyannote.audio import Pipeline
 from pydub import AudioSegment
 import torchaudio
+import torch
 
 from transcribe import transcribe, set_up_model_arguments
+from audio import load_audio
 
 from decoding import DecodingOptions
 
@@ -89,13 +89,12 @@ def diarize_input(audio_mapping):
 
 def get_audio_mapping(audio_path):
     import pathlib
-    get_audio = pyannote.audio.Audio()
-    # waveform, sample_rate = get_audio({"audio": str(pathlib.Path().resolve()) + '/' + audio_path})
-    torchaudio.set_audio_backend("sox_io")
-    waveform, sample_rate = torchaudio.load(str(pathlib.Path().resolve()) + '/' + audio_path)
-    # waveform = np.frombuffer(mono.get_array_of_samples(), dtype=np.int16)
-    # sample_rate = mono.sample_width
-    audio_mapping = {"waveform": waveform, "sample_rate": sample_rate}
+    # torchaudio.set_audio_backend("sox_io")
+    # waveform, sample_rate = torchaudio.load(str(pathlib.Path().resolve()) + '/' + audio_path)
+    waveform = torch.from_numpy(load_audio(audio_path))
+    SAMPLE_RATE = 16000
+
+    audio_mapping = {"waveform": waveform, "sample_rate": SAMPLE_RATE}
     return audio_mapping
 
 
