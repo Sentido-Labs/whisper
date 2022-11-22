@@ -111,8 +111,7 @@ def log_mel_spectrogram(audio: Union[str, np.ndarray, torch.Tensor], n_mels: int
             audio = load_audio(audio)
         audio = torch.from_numpy(audio)
 
-    print(audio.max())
-    print(audio.min())
+    print(audio)
     print(audio.shape)
 
     window = torch.hann_window(N_FFT).to(audio.device)
@@ -128,3 +127,23 @@ def log_mel_spectrogram(audio: Union[str, np.ndarray, torch.Tensor], n_mels: int
     print(log_spec)
     print(log_spec.shape)
     return log_spec
+
+
+'''
+reg output
+audio: tensor([ 0.0000e+00,  0.0000e+00,  0.0000e+00,  ..., -6.1035e-05,
+        -1.2207e-04, -1.5259e-04])
+audio shape: torch.Size([1396402])
+log_spec: tensor([[-0.6053, -0.6053, -0.6053,  ..., -0.1461, -0.2721, -0.1820],
+        [-0.6053, -0.6053, -0.6053,  ..., -0.2632, -0.1232, -0.2178],
+        [-0.6053, -0.6053, -0.6053,  ..., -0.4041, -0.1416, -0.2701],
+        ...,
+        [-0.6053, -0.6053, -0.6053,  ..., -0.6053, -0.6053, -0.6053],
+        [-0.6053, -0.6053, -0.6053,  ..., -0.6053, -0.6053, -0.6053],
+        [-0.6053, -0.6053, -0.6053,  ..., -0.6053, -0.6053, -0.6053]])
+log_spec.shape: torch.Size([80, 8727])
+
+this output
+
+
+'''
