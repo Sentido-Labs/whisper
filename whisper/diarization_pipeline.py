@@ -88,8 +88,9 @@ def diarize_input(audio_mapping):
 
 
 def get_audio_mapping(audio_path):
+    import pathlib
     get_audio = pyannote.audio.Audio()
-    waveform, sample_rate = get_audio({"audio": './'+audio_path})
+    waveform, sample_rate = get_audio({"audio": str(pathlib.Path().resolve()) + audio_path})
     # waveform = np.frombuffer(mono.get_array_of_samples(), dtype=np.int16)
     # sample_rate = mono.sample_width
     audio_mapping = {"waveform": waveform, "sample_rate": sample_rate}
