@@ -84,7 +84,7 @@ def diarize_input(audio_mapping):
     if g:
         groups.append(g)
     print(*groups, sep='\n')
-    return groups, audio_mapping
+    return groups
 
 
 def get_audio_mapping(audio_path):
@@ -128,7 +128,7 @@ def segment_audio(audio_mapping, audio_splits, spacer_prepended=False):
     return audio_segments, segment_info
 
 
-def transcribe_speaker_segments(audio_segments, speaker_info, input_audio_dir):
+def transcribe_speaker_segments(audio_segments, speaker_info, audio_path):
     from __init__ import load_model
     model = load_model("small", device="cuda")
     args = DecodingOptions(language='en').__dict__
@@ -144,7 +144,7 @@ def transcribe_speaker_segments(audio_segments, speaker_info, input_audio_dir):
         output.append(speaker+'\n'+string_format_milli(start_milli)+' --> '
                       + string_format_milli(end_milli) + '\n' + result['text'])
 
-    with open('./'+os.path.basename(input_audio_dir)+'.dia.txt', "w") as outfile:
+    with open('./'+os.path.basename(audio_path)+'.dia.txt', "w") as outfile:
         outfile.write('\n\n'.join(output))
 
 
@@ -154,7 +154,7 @@ def run():
     audio_mapping = get_audio_mapping(audio_path)
     audio_splits = diarize_input(audio_mapping)
     audio_segments, segment_speakers = segment_audio(audio_mapping, audio_splits)
-    transcribe_speaker_segments(audio_segments, segment_speakers, input_audio_dir)
+    transcribe_speaker_segments(audio_segments, segment_speakers, audio_path)
 
 
 run()
