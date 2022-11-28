@@ -7,7 +7,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from .utils import exact_div
+from utils import exact_div
 
 # hard-coded audio hyperparameters
 SAMPLE_RATE = 16000
@@ -111,9 +111,13 @@ def log_mel_spectrogram(audio: Union[str, np.ndarray, torch.Tensor], n_mels: int
             audio = load_audio(audio)
         audio = torch.from_numpy(audio)
 
+    print(audio)
+    print(audio.shape)
+    audio = torch.squeeze(audio)
+
     window = torch.hann_window(N_FFT).to(audio.device)
     stft = torch.stft(audio, N_FFT, HOP_LENGTH, window=window, return_complex=True)
-    magnitudes = stft[:, :-1].abs() ** 2
+    magnitudes = stft[:, :-1].abs() ** 2 ## NOTE -1 REMOVED HERE [:, :-1]
 
     filters = mel_filters(audio.device, n_mels)
     mel_spec = filters @ magnitudes
@@ -121,4 +125,35 @@ def log_mel_spectrogram(audio: Union[str, np.ndarray, torch.Tensor], n_mels: int
     log_spec = torch.clamp(mel_spec, min=1e-10).log10()
     log_spec = torch.maximum(log_spec, log_spec.max() - 8.0)
     log_spec = (log_spec + 4.0) / 4.0
+    print(log_spec)
+    print(log_spec.shape)
     return log_spec
+
+
+'''
+reg output
+audio: tensor([ 0.0000e+00,  0.0000e+00,  0.0000e+00,  ..., -6.1035e-05,
+        -1.2207e-04, -1.5259e-04])
+audio shape: torch.Size([1396402])
+log_spec: tensor([[-0.6053, -0.6053, -0.6053,  ..., -0.1461, -0.2721, -0.1820],
+        [-0.6053, -0.6053, -0.6053,  ..., -0.2632, -0.1232, -0.2178],
+        [-0.6053, -0.6053, -0.6053,  ..., -0.4041, -0.1416, -0.2701],
+        ...,
+        [-0.6053, -0.6053, -0.6053,  ..., -0.6053, -0.6053, -0.6053],
+        [-0.6053, -0.6053, -0.6053,  ..., -0.6053, -0.6053, -0.6053],
+        [-0.6053, -0.6053, -0.6053,  ..., -0.6053, -0.6053, -0.6053]])
+log_spec.shape: torch.Size([80, 8727])
+
+this output
+tensor([[0.0313, 0.0387, 0.0522,  ..., 0.0032, 0.0028, 0.0014]])
+torch.Size([1, 52656])
+tensor([[[ 0.6349,  0.1145,  0.2760,  ..., -0.3923, -0.1431, -0.3952],
+         [ 0.6986,  0.3567,  0.3757,  ..., -0.2992, -0.3553, -0.2179],
+         [ 0.6297,  0.2506,  0.4093,  ..., -0.2747, -0.3828, -0.2270],
+         ...,
+         [-0.6113, -0.6708, -0.6708,  ..., -0.6708, -0.6708, -0.6708],
+         [-0.6139, -0.6708, -0.6708,  ..., -0.6708, -0.6708, -0.6708],
+         [-0.6158, -0.6708, -0.6708,  ..., -0.6708, -0.6708, -0.6708]]])
+torch.Size([1, 80, 330])
+
+'''
